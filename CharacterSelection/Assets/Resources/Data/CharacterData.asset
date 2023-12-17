@@ -1,0 +1,75 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7da0da66d80899240981de9ef6020b58, type: 3}
+  m_Name: CharacterData
+  m_EditorClassIdentifier: 
+  DataArray:
+  - Name: Peter
+    SmallPortrait: {fileID: 21300000, guid: 3313aca2988223345acbc27eed25288b, type: 3}
+    FullBodyPortrait: {fileID: 21300000, guid: 59421c71fae3cf14d82312a9b8fda376, type: 3}
+  - Name: Satoshi
+    SmallPortrait: {fileID: 21300000, guid: 60d34b658d9cc934083cfc35067f7de3, type: 3}
+    FullBodyPortrait: {fileID: 21300000, guid: 2c578bef877115142ad8602dd510c22b, type: 3}
+  - Name: Robert
+    SmallPortrait: {fileID: 21300000, guid: 9ddc8dacf40c8d044b83b582f0c05962, type: 3}
+    FullBodyPortrait: {fileID: 21300000, guid: 9200b4dea81f4a94dafd048a97d5c539, type: 3}
+  - Name: Bearded Dragon
+    SmallPortrait: {fileID: 21300000, guid: a204f88b6a1b83946a9d6ff87e357aa6, type: 3}
+    FullBodyPortrait: {fileID: 21300000, guid: 2c07985c95facc6449c4e0bd22d8d625, type: 3}
+  - Name: Piano
+    SmallPortrait: {fileID: 21300000, guid: 46c59ce963c62bc41acdb3ab84071308, type: 3}
+    FullBodyPortrait: {fileID: 21300000, guid: 39cf80eb78570c74da984b4599471c85, type: 3}
+  - Name: kokona
+    SmallPortrait: {fileID: 21300000, guid: 7013825f9716468428dbaf634882ede0, type: 3}
+    FullBodyPortrait: {fileID: 21300000, guid: 7bb1c57c256a2844ba8b5d009143e952, type: 3}
+  - Name: Bouncy Ball
+    SmallPortrait: {fileID: 21300000, guid: c49ed8a4d45ee0f47ad80e80c239ae68, type: 3}
+    FullBodyPortrait: {fileID: 21300000, guid: a9d39e344af62a84e8737ec07a4c9ab3, type: 3}
+  - Name: X
+    SmallPortrait: {fileID: 21300000, guid: 1e40250d54fa75346ac80a916e494f62, type: 3}
+    FullBodyPortrait: {fileID: 21300000, guid: f8979ac5fc2b1864d9acb27409362f83, type: 3}
+  - Name: Ryu
+    SmallPortrait: {fileID: 21300000, guid: 4746342531c08ab4abcb58a094802b75, type: 3}
+    FullBodyPortrait: {fileID: 21300000, guid: dd04e10272aa3db49a73d808c399800d, type: 3}
+  - Name: Goblin
+    SmallPortrait: {fileID: 21300000, guid: ceafb4bae90c10a48872ad7ccc02b01d, type: 3}
+    FullBodyPortrait: {fileID: 21300000, guid: 5c0896acfc17ca44bbd73238d8b8fdb6, type: 3}
+  - Name: Sonic
+    SmallPortrait: {fileID: 21300000, guid: 6e85111d7dee44447b64421a411f2584, type: 3}
+    FullBodyPortrait: {fileID: 21300000, guid: f48cb8866eec8654598d48cb1be38674, type: 3}
+  - Name: Gear
+    SmallPortrait: {fileID: 21300000, guid: 97f4ba78ccc836c4f88b7102e0968eff, type: 3}
+    FullBodyPortrait: {fileID: 21300000, guid: 11d569d3343d75f4fa39b548d48d2e1f, type: 3}
+  - Name: TGT
+    SmallPortrait: {fileID: 21300000, guid: e224bd9e90b26134e9b5d36231a2441b, type: 3}
+    FullBodyPortrait: {fileID: 21300000, guid: bb67220499eb59f41a99365cb60a026e, type: 3}
+  - Name: TripleColor
+    SmallPortrait: {fileID: 21300000, guid: c72e6f66a113a6340b82afddc3b28dca, type: 3}
+    FullBodyPortrait: {fileID: 21300000, guid: a744d33f4c80fe448946a5b29f1c7f9a, type: 3}
+  - Name: Crystal
+    SmallPortrait: {fileID: 21300000, guid: c9c9c24feeb3ce04e844157b20432139, type: 3}
+    FullBodyPortrait: {fileID: 21300000, guid: e581890db0fbf3d44b3e9cdca5c05017, type: 3}
+  - Name: Route
+    SmallPortrait: {fileID: 21300000, guid: 802d1c05b5dea36439cc9550871976a5, type: 3}
+    FullBodyPortrait: {fileID: 21300000, guid: 6b4d87c109d0b334cbb97c2a64d2ff76, type: 3}
+  - Name: Black & Blue
+    SmallPortrait: {fileID: 21300000, guid: 36c3f4b90c6aad2488cb5500c5dea20b, type: 3}
+    FullBodyPortrait: {fileID: 21300000, guid: acc7b770701a3c9449c7c27c285b842b, type: 3}
+  - Name: Becky
+    SmallPortrait: {fileID: 21300000, guid: d9eb4c649458e0044896639b263cc282, type: 3}
+    FullBodyPortrait: {fileID: 21300000, guid: a25c38f494e6ba145bd77739e19433dc, type: 3}
+  - Name: Antenna
+    SmallPortrait: {fileID: 21300000, guid: 5707cdffd6656ec48a5b4e0f2fc0d007, type: 3}
+    FullBodyPortrait: {fileID: 21300000, guid: 36f8283a8d822854c86e94c1bbb88017, type: 3}
+  - Name: Master Hand
+    SmallPortrait: {fileID: 21300000, guid: 347257b2d541f3f41bc1bc8ffb08b84f, type: 3}
+    FullBodyPortrait: {fileID: 21300000, guid: e9ded3a88c9e00447bf3855a3419d9fb, type: 3}
