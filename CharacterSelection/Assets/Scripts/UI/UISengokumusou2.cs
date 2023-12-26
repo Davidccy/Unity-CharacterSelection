@@ -147,14 +147,14 @@ public class UISengokumusou2 : MonoBehaviour {
             }
             else {
                 float posInterpolation = GetCharacterPositionInterpolation(i, _currentcharacterIndex);
-                Vector3 scale = Vector3.one * Math.Max(Math.Abs(0 - posInterpolation), Math.Abs(1 - posInterpolation));
+                Vector3 scale = Vector3.one * Mathf.Max(Mathf.Abs(0 - posInterpolation), Mathf.Abs(1 - posInterpolation));
                 _characterSelectionObjectList[i].SetLocalScale(scale);
             }
 
             float alpha = i == 0 ? 1 : 0.5f;
             _characterSelectionObjectList[i].SetAlpha(alpha);
 
-            Color color = i == 0 ? Color.white : Color.Lerp(Color.white, Color.black, (1 - Math.Abs(0.5f - GetCharacterPositionInterpolation(i, _currentcharacterIndex))));
+            Color color = i == 0 ? Color.white : Color.Lerp(Color.white, Color.black, (1 - Mathf.Abs(0.5f - GetCharacterPositionInterpolation(i, _currentcharacterIndex))));
             _characterSelectionObjectList[i].SetColor(color);
         }
 
@@ -278,10 +278,10 @@ public class UISengokumusou2 : MonoBehaviour {
                     _characterSelectionObjectList[i].SetColor(color);
                 }
                 else {
-                    Vector3 scale = Vector3.one * Math.Max(Math.Abs(0 - posInterpolation), Math.Abs(1 - posInterpolation));
+                    Vector3 scale = Vector3.one * Mathf.Max(Mathf.Abs(0 - posInterpolation), Mathf.Abs(1 - posInterpolation));
                     _characterSelectionObjectList[i].SetLocalScale(scale);
 
-                    Color color = Color.Lerp(Color.white, Color.black, (1 - Math.Abs(0.5f - posInterpolation)));
+                    Color color = Color.Lerp(Color.white, Color.black, (1 - Mathf.Abs(0.5f - posInterpolation)));
                     _characterSelectionObjectList[i].SetColor(color);
                 }
             }
@@ -506,7 +506,7 @@ public class UISengokumusou2 : MonoBehaviour {
         }
 
         float angle = 270 + (-360 * interpolation);
-        float horizontalOffset = (0.5f - Math.Abs(interpolation - 0.5f)) / 0.5f * _routeOvalHorizontalOffset;
+        float horizontalOffset = (0.5f - Mathf.Abs(interpolation - 0.5f)) / 0.5f * _routeOvalHorizontalOffset;
 
         float x = _routeOvalWidth * Mathf.Cos(angle / Mathf.Rad2Deg) + horizontalOffset;
         float y = _routeOvalHeight * Mathf.Sin(angle / Mathf.Rad2Deg);
