@@ -48,6 +48,8 @@ public class UISangokumusou2 : MonoBehaviour {
     [SerializeField] private float _fadeInVerOffest = 100;
 
     [SerializeField] private float _selectiontPeriod = 0.3f; // Seconds
+
+    [SerializeField] private AnimationCurve _fadeInFadeOutCurve = null;
     #endregion
 
     #region Internal Fields
@@ -139,7 +141,7 @@ public class UISangokumusou2 : MonoBehaviour {
         _pdFadeIn.Play();
 
         float passedTime = 0;
-        float interpolation = 0;
+        float fadeInInterpolation = 0;
         bool isFInish = false;
 
         // Initialization of selection objects
@@ -149,18 +151,19 @@ public class UISangokumusou2 : MonoBehaviour {
 
         // Perform
         while (!isFInish) {
-            interpolation = Mathf.Clamp01(passedTime / _fadeInFadeOutPeriod);
+            fadeInInterpolation = Mathf.Clamp01(passedTime / _fadeInFadeOutPeriod);
 
             for (int i = 0; i < _characterSelectionObjectList.Count; i++) {
-                Vector3 oriPos = GetCharacterPositionOnRoute(i, _characterSelectionObjectList.Count);
-                Vector3 offset = GetFadeInFadeOutOffset(true, i, _characterSelectionObjectList.Count, interpolation);
-                Vector3 performPos = oriPos + offset;
-                _characterSelectionObjectList[i].Rect.localPosition = performPos;
+                // Old method
+                //Vector3 oriPos = GetPositionOnRoute(i, _characterCount);
+                //Vector3 offset = GetFadeInFadeOutOffset(true, i, _characterCount, interpolation);
+                //Vector3 performPos = oriPos + offset;
 
-                CanvasGroup cgChara = _characterSelectionObjectList[i].GetComponent<CanvasGroup>();
-                if (cgChara != null) {
-                    cgChara.alpha = interpolation * 0.5f;
-                }
+                // New method
+                Vector3 performPos = GetFadeInFadeOutPosition(true, fadeInInterpolation, i, _characterCount);
+
+                _characterSelectionObjectList[i].SetLocalPosition(performPos);
+                _characterSelectionObjectList[i].SetAlpha(fadeInInterpolation * 0.5f);
             }
 
             if (passedTime >= _fadeInFadeOutPeriod) {
@@ -202,11 +205,11 @@ public class UISangokumusou2 : MonoBehaviour {
         ShowButtons(false);
 
         float passedTime = 0;
-        float interpolation = 0;
-        bool isFInish = false;
+        float fadeOutInterpolation = 0;
+        bool isFinish = false;
 
-        while (!isFInish) {
-            interpolation = Mathf.Clamp01(passedTime / _fadeInFadeOutPeriod);
+        while (!isFinish) {
+            fadeOutInterpolation = Mathf.Clamp01(passedTime / _fadeInFadeOutPeriod);
 
             for (int i = 0; i < _characterSelectionObjectList.Count; i++) {
                 int positionIndex = i - _currentcharacterIndex;
@@ -214,19 +217,20 @@ public class UISangokumusou2 : MonoBehaviour {
                     positionIndex += _characterCount;
                 }
 
-                Vector3 oriPos = GetCharacterPositionOnRoute(positionIndex, _characterSelectionObjectList.Count);
-                Vector3 offset = GetFadeInFadeOutOffset(false, positionIndex, _characterSelectionObjectList.Count, interpolation);
-                Vector3 performPos = oriPos + offset;
-                _characterSelectionObjectList[i].Rect.localPosition = performPos;
+                // Old method
+                //Vector3 oriPos = GetPositionOnRoute(positionIndex, _characterCount);
+                //Vector3 offset = GetFadeInFadeOutOffset(false, positionIndex, _characterCount, interpolation);
+                //Vector3 performPos = oriPos + offset;
 
-                CanvasGroup cgChara = _characterSelectionObjectList[i].GetComponent<CanvasGroup>();
-                if (cgChara != null) {
-                    cgChara.alpha = (1 - interpolation) * 0.5f;
-                }
+                // New method
+                Vector3 performPos = GetFadeInFadeOutPosition(false, fadeOutInterpolation, positionIndex, _characterCount);
+
+                _characterSelectionObjectList[i].SetLocalPosition(performPos);
+                _characterSelectionObjectList[i].SetAlpha((1 - fadeOutInterpolation) * 0.5f);
             }
 
             if (passedTime >= _fadeInFadeOutPeriod) {
-                isFInish = true;
+                isFinish = true;
             }
 
             yield return new WaitForEndOfFrame();
@@ -272,7 +276,7 @@ public class UISangokumusou2 : MonoBehaviour {
 
                 float posInterpolation = Mathf.Lerp(fromPosInterpolation, toPosInterpolation, performInterpolation);
                 Vector3 pos = GetPositionOnRoute(posInterpolation);
-                _characterSelectionObjectList[i].Rect.localPosition = pos;
+                _characterSelectionObjectList[i].SetLocalPosition(pos);
             }
 
             if (passedTime >= _selectiontPeriod) {
@@ -333,7 +337,7 @@ public class UISangokumusou2 : MonoBehaviour {
 
             newObject.SetPortrait(_characterSelectionDataList[i].SmallPortrait);
             newObject.SetColor(new Color(Random.Range(0f, 1.0f), Random.Range(0f, 1.0f), Random.Range(0f, 1.0f)));
-            newObject.Rect.localPosition = GetCharacterPositionOnRoute(i, _characterCount);
+            newObject.SetLocalPosition(GetPositionOnRoute(i, _characterCount));
 
             _characterSelectionObjectList.Add(newObject);
         }
@@ -415,7 +419,7 @@ public class UISangokumusou2 : MonoBehaviour {
         for (int i = 0; i < _characterSelectionObjectList.Count; i++) {
             float posInterpolation = GetCharacterPositionInterpolation(i, _currentcharacterIndex);
             Vector3 pos = GetPositionOnRoute(posInterpolation);
-            _characterSelectionObjectList[i].Rect.localPosition = pos;
+            _characterSelectionObjectList[i].SetLocalPosition(pos);
         }
     }    
 
@@ -428,11 +432,11 @@ public class UISangokumusou2 : MonoBehaviour {
             float diffInterpolation = MathF.Min(positionInterpolation - 0, 1 - positionInterpolation);
 
             if (diffInterpolation <= 0.25f) {
-                _characterSelectionObjectList[characterIndex].Rect.SetParent(_rectSelectionCharacterFrontRoot);
+                _characterSelectionObjectList[characterIndex].SetParent(_rectSelectionCharacterFrontRoot);
                 dataList.Add((diffInterpolation, _characterSelectionObjectList[characterIndex]));
             }
             else {
-                _characterSelectionObjectList[characterIndex].Rect.SetParent(_rectSelectionCharacterBackRoot);
+                _characterSelectionObjectList[characterIndex].SetParent(_rectSelectionCharacterBackRoot);
                 dataListBack.Add((diffInterpolation, _characterSelectionObjectList[characterIndex]));
             }
         }
@@ -441,11 +445,11 @@ public class UISangokumusou2 : MonoBehaviour {
         dataListBack.Sort((x, y) => x.Item1.CompareTo(y.Item1));
 
         for (int i = 0; i < dataList.Count; i++) {
-            dataList[i].Item2.Rect.SetAsFirstSibling();
+            dataList[i].Item2.SetAsFirstSibling();
         }
 
         for (int i = 0; i < dataListBack.Count; i++) {
-            dataListBack[i].Item2.Rect.SetAsFirstSibling();
+            dataListBack[i].Item2.SetAsFirstSibling();
         }
     }
 
@@ -458,27 +462,22 @@ public class UISangokumusou2 : MonoBehaviour {
         _imageFocusCharacterAttack.fillAmount = (float) csData.Attack / 1000;
         _imageFocusCharacterDefense.fillAmount = (float) csData.Defense / 1000;
     }
-    
-    private Vector3 GetFadeInFadeOutOffset(bool isFadeIn, int posIndex, int totalPosCount, float interpolation) {
-        // TODO:
-        // Fix Note
 
-        // NOTE:
-        // Offset = (0, -100, 0) when interpolation = 0
-        // Offset = (75, 0, 0) when interpolation = 0.25
-        // Offset = (0, 50, 0) when interpolation = 0.5
-        // Offset = (25, 0, 0) when interpolation = 0.75
-        // Offset = (0, 0, 0) when interpolation = 1
-        // A counterclockwise vortex liked performance, start from angle 270 degree
+    //private Vector3 GetFadeInFadeOutOffset(bool isFadeIn, int posIndex, int totalPosCount, float fifdInterpolation) {
+    //    // NOTE:
+    //    // A 'Counterclockwise' vortex liked performance, start from angle 270 degree
 
-        float pInterpolation = isFadeIn ? interpolation : 1 - interpolation; // Performance interpolation
+    //    // NOTE:
+    //    // 'fifdInterpolation' = Fade In Fade Out Interpolation
 
-        float angle = 180 - (360 * ((float) posIndex / totalPosCount)) + 90 * pInterpolation;
-        float offsetX = _fadeInHorOffest * Mathf.Cos(angle / Mathf.Rad2Deg) * (1 - pInterpolation);
-        float offsetY = _fadeInVerOffest * Mathf.Sin(angle / Mathf.Rad2Deg) * (1 - pInterpolation);
+    //    float performInterpolation = isFadeIn ? fifdInterpolation : 1 - fifdInterpolation;
 
-        return new Vector3(offsetX, offsetY, 0);
-    }
+    //    float degree = 180 - (360 * ((float) posIndex / totalPosCount)) + 90 * performInterpolation;
+    //    float offsetX = _fadeInHorOffest * Mathf.Cos(degree / Mathf.Rad2Deg) * (1 - performInterpolation);
+    //    float offsetY = _fadeInVerOffest * Mathf.Sin(degree / Mathf.Rad2Deg) * (1 - performInterpolation);
+
+    //    return new Vector3(offsetX, offsetY, 0);
+    //}
 
     private float GetCharacterPositionInterpolation(int charaIndex, int focusedCharaIndex) {
         // NOTE:
@@ -510,27 +509,62 @@ public class UISangokumusou2 : MonoBehaviour {
         return (float) posIndex / _characterCount;
     }
 
-    private Vector3 GetCharacterPositionOnRoute(int posIndex, int totalPosCount) {
-        float interpolation = (float) posIndex / totalPosCount;
+    private Vector3 GetFadeInFadeOutPosition(bool isFadeIn, float fifdInterpolation, int posIndex, int totalPosCount) {
+        // NOTE:
+        // A 'Counterclockwise' vortex liked performance, start from angle 270 degree
 
-        return GetPositionOnRoute(interpolation);
+        // NOTE:
+        // 'fifdInterpolation' = Fade In Fade Out Interpolation
+
+        float performInterpolation = isFadeIn ? fifdInterpolation : 1 - fifdInterpolation;
+
+        float fromPosInterpolation = (float) posIndex / totalPosCount + 0.5f; // Half of route
+        float toPosInterpolation = (float) posIndex / totalPosCount;
+        float posInterpolation = Mathf.Lerp(fromPosInterpolation, toPosInterpolation, _fadeInFadeOutCurve.Evaluate(performInterpolation));
+
+        float degree = ConvertPositionInterpolationToDegree(posInterpolation);
+        float offsetX = _fadeInHorOffest * Mathf.Cos(degree / Mathf.Rad2Deg) * (1 - performInterpolation);
+        float offsetY = _fadeInVerOffest * Mathf.Sin(degree / Mathf.Rad2Deg) * (1 - performInterpolation);
+
+        return GetPositionOnRoute(posInterpolation) + new Vector3(offsetX, offsetY, 0);
     }
 
-    private Vector3 GetPositionOnRoute(float interpolation) {
-        // NOTE:
-        // Convert "interpolation" to angle
-        // Clockwise from 270 when interpolation = 0
+    private Vector3 GetPositionOnRoute(int charaPosIndex, int totalPosCount) {
+        float posInterpolation = (float) charaPosIndex / totalPosCount;
 
-        interpolation %= 1.0f;
-        if (interpolation < 0) {
-            interpolation += 1;
-        }
+        return GetPositionOnRoute(posInterpolation);
+    }
 
-        float angle = 270 + (-360 * interpolation);
-        float x = _routeOvalWidth * Mathf.Cos(angle / Mathf.Rad2Deg);
-        float y = _routeOvalHeight * Mathf.Sin(angle / Mathf.Rad2Deg);
+    private Vector3 GetPositionOnRoute(float posInterpolation) {
+        float dergee = ConvertPositionInterpolationToDegree(posInterpolation);
+
+        float x = _routeOvalWidth * Mathf.Cos(dergee / Mathf.Rad2Deg);
+        float y = _routeOvalHeight * Mathf.Sin(dergee / Mathf.Rad2Deg);
 
         return new Vector3(x, y, 0);
+    }
+
+    private float ConvertPositionInterpolationToDegree(float posInterpolation) {
+        // NOTE:
+        // Convert Position Interpolation to Angle expressed by degree
+        // 
+        // If 'posInterpolation' = 0, then degree is 270
+        // Position moves as 'Clockwise' when interpolation increases
+
+        posInterpolation = GetSimplifiedPositionInterpolation(posInterpolation);
+
+        float dergee = 270 + (-360 * posInterpolation);
+
+        return dergee;
+    }
+
+    private float GetSimplifiedPositionInterpolation(float posInterpolation) {
+        posInterpolation %= 1.0f;
+        if (posInterpolation < 0) {
+            posInterpolation += 1;
+        }
+
+        return posInterpolation;
     }
     #endregion
 }

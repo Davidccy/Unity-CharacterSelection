@@ -135,18 +135,18 @@ public class UISengokumusou2 : MonoBehaviour {
         _pdFadeIn.Play();
 
         float passedTime = 0;
-        float interpolation = 0;
+        float fadeInInterpolation = 0;
         bool isFInish = false;
 
         // Initialization of selection objects
         for (int i = 0; i < _characterSelectionObjectList.Count; i++) {
             _characterSelectionObjectList[i].gameObject.SetActive(true);
 
+            float posInterpolation = GetCharacterPositionInterpolation(i, _currentcharacterIndex);
             if (i == 0) {
                 _characterSelectionObjectList[i].SetLocalScale(Vector3.one);
             }
             else {
-                float posInterpolation = GetCharacterPositionInterpolation(i, _currentcharacterIndex);
                 Vector3 scale = Vector3.one * Mathf.Max(Mathf.Abs(0 - posInterpolation), Mathf.Abs(1 - posInterpolation));
                 _characterSelectionObjectList[i].SetLocalScale(scale);
             }
@@ -154,22 +154,22 @@ public class UISengokumusou2 : MonoBehaviour {
             float alpha = i == 0 ? 1 : 0.5f;
             _characterSelectionObjectList[i].SetAlpha(alpha);
 
-            Color color = i == 0 ? Color.white : Color.Lerp(Color.white, Color.black, (1 - Mathf.Abs(0.5f - GetCharacterPositionInterpolation(i, _currentcharacterIndex))));
+            Color color = i == 0 ? Color.white : Color.Lerp(Color.white, Color.black, (1 - Mathf.Abs(0.5f - posInterpolation)));
             _characterSelectionObjectList[i].SetColor(color);
         }
 
         // Perform
         while (!isFInish) {
-            interpolation = Mathf.Clamp01(passedTime / _fadeInFadeOutPeriod);
+            fadeInInterpolation = Mathf.Clamp01(passedTime / _fadeInFadeOutPeriod);
 
             for (int i = 0; i < _characterSelectionObjectList.Count; i++) {
                 int positionIndex = i;
 
-                Vector3 performPos = GetCharacterFadeInFadeOutPositionOnRoute(true, interpolation, i, _characterSelectionObjectList.Count);
+                Vector3 performPos = GetFadeInFadeOutPosition(true, fadeInInterpolation, i, _characterCount);
                 _characterSelectionObjectList[i].SetLocalPosition(performPos);
 
                 if (positionIndex == 0) {
-                    _characterSelectionObjectList[i].SetLocalScale(Vector3.one * (1 + 0.5f * interpolation));
+                    _characterSelectionObjectList[i].SetLocalScale(Vector3.one * (1 + 0.5f * fadeInInterpolation));
                 }
             }
 
@@ -201,11 +201,11 @@ public class UISengokumusou2 : MonoBehaviour {
         ShowButtons(false);
 
         float passedTime = 0;
-        float interpolation = 0;
+        float fadeOutInterpolation = 0;
         bool isFInish = false;
 
         while (!isFInish) {
-            interpolation = Mathf.Clamp01(passedTime / _fadeInFadeOutPeriod);
+            fadeOutInterpolation = Mathf.Clamp01(passedTime / _fadeInFadeOutPeriod);
 
             for (int i = 0; i < _characterSelectionObjectList.Count; i++) {
                 int positionIndex = i - _currentcharacterIndex;
@@ -213,11 +213,11 @@ public class UISengokumusou2 : MonoBehaviour {
                     positionIndex += _characterCount;
                 }
 
-                Vector3 performPos = GetCharacterFadeInFadeOutPositionOnRoute(false, interpolation, positionIndex, _characterSelectionObjectList.Count);
+                Vector3 performPos = GetFadeInFadeOutPosition(false, fadeOutInterpolation, positionIndex, _characterCount);
                 _characterSelectionObjectList[i].SetLocalPosition(performPos);
 
                 if (positionIndex == 0) {
-                    _characterSelectionObjectList[i].SetLocalScale(Vector3.one * (1 + 0.5f * (1 - interpolation)));
+                    _characterSelectionObjectList[i].SetLocalScale(Vector3.one * (1 + 0.5f * (1 - fadeOutInterpolation)));
                 }
             }
 
@@ -338,7 +338,7 @@ public class UISengokumusou2 : MonoBehaviour {
             UISengokuSelectionObject newObject = Instantiate(_selectionObjectRes, _rectCharacterRoot);
 
             newObject.SetPortrait(_characterSelectionDataList[i].FullBodyPortrait);
-            newObject.SetLocalPosition(GetCharacterPositionOnRoute(i, _characterCount));
+            newObject.SetLocalPosition(GetPositionOnRoute(i, _characterCount));
 
             _characterSelectionObjectList.Add(newObject);
         }
@@ -422,13 +422,13 @@ public class UISengokumusou2 : MonoBehaviour {
             float positionInterpolation = GetCharacterPositionInterpolation(characterIndex, _currentcharacterIndex);
             float diffInterpolation = MathF.Min(positionInterpolation - 0, 1 - positionInterpolation);
 
-            _characterSelectionObjectList[characterIndex].Rect.SetParent(_rectCharacterRoot);
+            _characterSelectionObjectList[characterIndex].SetParent(_rectCharacterRoot);
             dataList.Add((diffInterpolation, _characterSelectionObjectList[characterIndex]));
         }
 
         dataList.Sort((x, y) => x.Item1.CompareTo(y.Item1));
         for (int i = 0; i < dataList.Count; i++) {
-            dataList[i].Item2.Rect.SetAsFirstSibling();
+            dataList[i].Item2.SetAsFirstSibling();
         }
     }
 
@@ -475,43 +475,59 @@ public class UISengokumusou2 : MonoBehaviour {
         return (float) posIndex / _characterCount;
     }
 
-    private Vector3 GetCharacterFadeInFadeOutPositionOnRoute(bool isFadeIn, float interpolation, int posIndex, int totalPosCount) {
-        float fromInterpolation = isFadeIn ? 1 : (float) posIndex / totalPosCount;
-        float toInterpolation = isFadeIn ? (float) posIndex / totalPosCount : 1;
+    private Vector3 GetFadeInFadeOutPosition(bool isFadeIn, float fifoInterpolation, int posIndex, int totalPosCount) {
+        float fromPosInterpolation = isFadeIn ? 1 : (float) posIndex / totalPosCount;
+        float toPosInterpolation = isFadeIn ? (float) posIndex / totalPosCount : 1;
 
         if (posIndex == 0) {
-            fromInterpolation = 0;
-            toInterpolation = 0;
+            fromPosInterpolation = 0;
+            toPosInterpolation = 0;
         }
 
-        float fadeInFadeOutInterpolation = Mathf.Lerp(fromInterpolation, toInterpolation, interpolation);
+        float fadeInFadeOutInterpolation = Mathf.Lerp(fromPosInterpolation, toPosInterpolation, fifoInterpolation);
 
         return GetPositionOnRoute(fadeInFadeOutInterpolation);
     }
 
-    private Vector3 GetCharacterPositionOnRoute(int posIndex, int totalPosCount) {
-        float interpolation = (float) posIndex / totalPosCount;
+    private Vector3 GetPositionOnRoute(int charaPosIndex, int totalPosCount) {
+        float posInterpolation = (float) charaPosIndex / totalPosCount;
 
-        return GetPositionOnRoute(interpolation);
+        return GetPositionOnRoute(posInterpolation);
     }
 
-    private Vector3 GetPositionOnRoute(float interpolation) {
-        // NOTE:
-        // Convert "interpolation" to angle
-        // Clockwise from 270 when interpolation = 0
+    private Vector3 GetPositionOnRoute(float posInterpolation) {
+        posInterpolation = GetSimplifiedPositionInterpolation(posInterpolation);
 
-        interpolation %= 1.0f;
-        if (interpolation < 0) {
-            interpolation += 1;
-        }
+        float dergee = ConvertPositionInterpolationToDegree(posInterpolation);
+        float horizontalOffset = (0.5f - Mathf.Abs(posInterpolation - 0.5f)) / 0.5f * _routeOvalHorizontalOffset;
 
-        float angle = 270 + (-360 * interpolation);
-        float horizontalOffset = (0.5f - Mathf.Abs(interpolation - 0.5f)) / 0.5f * _routeOvalHorizontalOffset;
-
-        float x = _routeOvalWidth * Mathf.Cos(angle / Mathf.Rad2Deg) + horizontalOffset;
-        float y = _routeOvalHeight * Mathf.Sin(angle / Mathf.Rad2Deg);
+        float x = _routeOvalWidth * Mathf.Cos(dergee / Mathf.Rad2Deg) + horizontalOffset;
+        float y = _routeOvalHeight * Mathf.Sin(dergee / Mathf.Rad2Deg);
 
         return new Vector3(x, y, 0);
+    }
+
+    private float ConvertPositionInterpolationToDegree(float posInterpolation) {
+        // NOTE:
+        // Convert Position Interpolation to Angle expressed by degree
+        // 
+        // If 'posInterpolation' = 0, then degree is 270
+        // Position moves as 'Clockwise' when interpolation increases
+
+        posInterpolation = GetSimplifiedPositionInterpolation(posInterpolation);
+
+        float dergee = 270 + (-360 * posInterpolation);
+
+        return dergee;
+    }
+
+    private float GetSimplifiedPositionInterpolation(float posInterpolation) {
+        posInterpolation %= 1.0f;
+        if (posInterpolation < 0) {
+            posInterpolation += 1;
+        }
+
+        return posInterpolation;
     }
     #endregion
 }

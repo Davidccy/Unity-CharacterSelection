@@ -3,21 +3,13 @@ using UnityEngine.UI;
 
 public class UISengokuSelectionObject : MonoBehaviour {
     #region Serialized Fields
+    [SerializeField] private RectTransform _rectRoot = null;
     [SerializeField] private Image _imagePortrait = null;
     [SerializeField] private CanvasGroup _cg = null;
-
     #endregion
 
     #region Internal Fields
     private int _index;
-    #endregion
-
-    #region Properties
-    public RectTransform Rect {
-        get {
-            return this.transform as RectTransform;
-        }
-    }
     #endregion
 
     #region APIs
@@ -38,11 +30,19 @@ public class UISengokuSelectionObject : MonoBehaviour {
     }
 
     public void SetLocalPosition(Vector3 localPosition) {
-        Rect.localPosition = localPosition;
+        _rectRoot.localPosition = localPosition;
     }
 
     public void SetLocalScale(Vector3 localScale) {
-        Rect.localScale = localScale;
+        _rectRoot.localScale = localScale;
+    }
+
+    public void SetParent(RectTransform rectParent) {
+        _rectRoot.SetParent(rectParent);
+    }
+
+    public void SetAsFirstSibling() {
+        _rectRoot.SetAsFirstSibling();
     }
     #endregion
 }
