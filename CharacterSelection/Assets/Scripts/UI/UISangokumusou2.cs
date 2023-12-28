@@ -17,9 +17,12 @@ public class UISangokumusou2 : MonoBehaviour {
     [SerializeField] private Button _btnNextCharacter = null; // To left
     [SerializeField] private Button _btnPreviousCharacter = null; // To right
 
+    [SerializeField] private RectTransform _rectTitleRoot = null;
+    [SerializeField] private RectTransform _rectOperationHintRoot = null;
+
     [SerializeField] private RectTransform _rectSelectionCharacterFrontRoot = null;
     [SerializeField] private RectTransform _rectSelectionCharacterBackRoot = null;
-    [SerializeField] private UISangokuSelectionObject _selectionObjectRes = null;
+    [SerializeField] private UISangokuSelectionObject _selectionObjectRes = null;    
 
     [SerializeField] private RectTransform _rectRouteCircle = null;
     [SerializeField] private RectTransform _rectSelectFrame = null;
@@ -185,7 +188,7 @@ public class UISangokumusou2 : MonoBehaviour {
         ShowFocusCharacterFullBodyPortrait(true);
         ShowFocusCharacterInfo(true);
         ShowFocusCharacterFrame(true);
-        ShowButtons(true);
+        ShowCharacterSelectionButtons(true);
     }
 
     private IEnumerator CoPlayFadeOut() {
@@ -202,7 +205,7 @@ public class UISangokumusou2 : MonoBehaviour {
         ShowFocusCharacterFullBodyPortrait(false);
         ShowFocusCharacterInfo(false);
         ShowFocusCharacterFrame(false);
-        ShowButtons(false);
+        ShowCharacterSelectionButtons(false);
 
         float passedTime = 0;
         float fadeOutInterpolation = 0;
@@ -299,7 +302,11 @@ public class UISangokumusou2 : MonoBehaviour {
 
     #region Internal Methods
     private void InitUI() {
-        ShowButtons(false);
+        _btnBack.gameObject.SetActive(false);
+        _rectTitleRoot.gameObject.SetActive(false);
+        _rectOperationHintRoot.gameObject.SetActive(false);
+
+        ShowCharacterSelectionButtons(false);
         ShowFocusCharacterFullBodyPortrait(false);
         ShowFocusCharacterInfo(false);
         ShowFocusCharacterFrame(false);
@@ -343,7 +350,7 @@ public class UISangokumusou2 : MonoBehaviour {
         }
     }
 
-    private void ShowButtons(bool show) {
+    private void ShowCharacterSelectionButtons(bool show) {
         _btnNextCharacter.gameObject.SetActive(show);
         _btnPreviousCharacter.gameObject.SetActive(show);
     }

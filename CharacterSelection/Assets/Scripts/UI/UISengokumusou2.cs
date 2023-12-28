@@ -17,6 +17,9 @@ public class UISengokumusou2 : MonoBehaviour {
     [SerializeField] private Button _btnNextCharacter = null; // To left
     [SerializeField] private Button _btnPreviousCharacter = null; // To right
 
+    [SerializeField] private RectTransform _rectTitleRoot = null;
+    [SerializeField] private RectTransform _rectOperationHintRoot = null;
+
     [SerializeField] private GameObject _goFocusCharacterPortraitRoot = null;
     [SerializeField] private GameObject _goFocusCharacterInfoRoot = null;
 
@@ -59,6 +62,8 @@ public class UISengokumusou2 : MonoBehaviour {
 
     #region Mono Behaviour Hooks
     private void Awake() {
+        InitUI();
+
         _btnBack.onClick.AddListener(ButtonBackOnClick);
         _btnNextCharacter.onClick.AddListener(ButtonNextCharacterOnClick);
         _btnPreviousCharacter.onClick.AddListener(ButtonPreviousCharacterOnClick);
@@ -185,7 +190,7 @@ public class UISengokumusou2 : MonoBehaviour {
 
         RefreshPosition();
 
-        ShowButtons(true);
+        ShowCharacterSelectionButtons(true);
     }
 
     private IEnumerator CoPlayFadeOut() {
@@ -198,7 +203,7 @@ public class UISengokumusou2 : MonoBehaviour {
         _pdFocusCharacterPortrait.Stop();
         _pdFadeOut.Play();
 
-        ShowButtons(false);
+        ShowCharacterSelectionButtons(false);
 
         float passedTime = 0;
         float fadeOutInterpolation = 0;
@@ -302,7 +307,11 @@ public class UISengokumusou2 : MonoBehaviour {
 
     #region Internal Methods
     private void InitUI() {
-        ShowButtons(false);
+        _btnBack.gameObject.SetActive(false);
+        _rectTitleRoot.gameObject.SetActive(false);
+        _rectOperationHintRoot.gameObject.SetActive(false);
+
+        ShowCharacterSelectionButtons(false);
         ShowFocusCharacterPortrait(false);
         ShowFocusCharacterInfo(false);
     }
@@ -344,7 +353,7 @@ public class UISengokumusou2 : MonoBehaviour {
         }
     }
 
-    private void ShowButtons(bool show) {
+    private void ShowCharacterSelectionButtons(bool show) {
         _btnNextCharacter.gameObject.SetActive(show);
         _btnPreviousCharacter.gameObject.SetActive(show);
     }
