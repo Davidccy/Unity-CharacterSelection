@@ -24,11 +24,11 @@ public class UISangokumusou2 : MonoBehaviour {
     [SerializeField] private RectTransform _rectSelectionCharacterBackRoot = null;
     [SerializeField] private UISangokuSelectionObject _selectionObjectRes = null;    
 
-    [SerializeField] private RectTransform _rectRouteCircle = null;
-    [SerializeField] private RectTransform _rectSelectFrame = null;
+    [SerializeField] private RectTransform _rectRouteCircleRoot = null;
+    [SerializeField] private RectTransform _rectFocusFrameRoot = null;
 
-    [SerializeField] private GameObject _goFocusCharacterFullBodyPortraitRoot = null;
-    [SerializeField] private GameObject _goFocusCharacterInfoRoot = null;
+    [SerializeField] private RectTransform _rectFocusCharacterFullBodyPortraitRoot = null;
+    [SerializeField] private RectTransform _rectFocusCharacterInfoRoot = null;
 
     [Header("Timelines")]
     [SerializeField] private PlayableDirector _pdFadeIn = null;
@@ -70,6 +70,8 @@ public class UISangokumusou2 : MonoBehaviour {
 
     #region Mono Behaviour Hooks
     private void Awake() {
+        InitUI();
+
         _btnBack.onClick.AddListener(ButtonBackOnClick);
         _btnNextCharacter.onClick.AddListener(ButtonNextCharacterOnClick);
         _btnPreviousCharacter.onClick.AddListener(ButtonPreviousCharacterOnClick);
@@ -118,8 +120,7 @@ public class UISangokumusou2 : MonoBehaviour {
 
         _characterCount = characterAmount;
         _currentcharacterIndex = 0;
-
-        InitUI();
+                
         InitCharacterSelectionData(soCHaracterData);
         InitCharacterSelectionObject();
 
@@ -187,7 +188,7 @@ public class UISangokumusou2 : MonoBehaviour {
 
         ShowFocusCharacterFullBodyPortrait(true);
         ShowFocusCharacterInfo(true);
-        ShowFocusCharacterFrame(true);
+        ShowFocusFrame(true);
         ShowCharacterSelectionButtons(true);
     }
 
@@ -204,7 +205,7 @@ public class UISangokumusou2 : MonoBehaviour {
 
         ShowFocusCharacterFullBodyPortrait(false);
         ShowFocusCharacterInfo(false);
-        ShowFocusCharacterFrame(false);
+        ShowFocusFrame(false);
         ShowCharacterSelectionButtons(false);
 
         float passedTime = 0;
@@ -302,6 +303,10 @@ public class UISangokumusou2 : MonoBehaviour {
 
     #region Internal Methods
     private void InitUI() {
+        CanvasGroup cg = _rectRouteCircleRoot.GetComponent<CanvasGroup>();
+        if (cg != null) {
+            cg.alpha = 0;
+        }
         _btnBack.gameObject.SetActive(false);
         _rectTitleRoot.gameObject.SetActive(false);
         _rectOperationHintRoot.gameObject.SetActive(false);
@@ -309,7 +314,7 @@ public class UISangokumusou2 : MonoBehaviour {
         ShowCharacterSelectionButtons(false);
         ShowFocusCharacterFullBodyPortrait(false);
         ShowFocusCharacterInfo(false);
-        ShowFocusCharacterFrame(false);
+        ShowFocusFrame(false);
     }
 
     private void InitCharacterSelectionData(SOCharacterData soCharacterData) {
@@ -356,15 +361,15 @@ public class UISangokumusou2 : MonoBehaviour {
     }
 
     private void ShowFocusCharacterFullBodyPortrait(bool show) {
-        _goFocusCharacterFullBodyPortraitRoot.SetActive(show);
+        _rectFocusCharacterFullBodyPortraitRoot.gameObject.SetActive(show);
     }
 
     private void ShowFocusCharacterInfo(bool show) {
-        _goFocusCharacterInfoRoot.SetActive(show);
+        _rectFocusCharacterInfoRoot.gameObject.SetActive(show);
     }
 
-    private void ShowFocusCharacterFrame(bool show) {
-        _rectSelectFrame.gameObject.SetActive(show);
+    private void ShowFocusFrame(bool show) {
+        _rectFocusFrameRoot.gameObject.SetActive(show);
     }
 
     private void PlayFadeIn() {
@@ -418,8 +423,8 @@ public class UISangokumusou2 : MonoBehaviour {
     }
 
     private void RefreshDecoration() {
-        _rectRouteCircle.sizeDelta = new Vector2(_previousRouteOvalWidth * 2, _previousRouteOvalHeight * 2);
-        _rectSelectFrame.anchoredPosition = new Vector3(0, -_previousRouteOvalHeight, 0);
+        _rectRouteCircleRoot.sizeDelta = new Vector2(_previousRouteOvalWidth * 2, _previousRouteOvalHeight * 2);
+        _rectFocusFrameRoot.anchoredPosition = new Vector3(0, -_previousRouteOvalHeight, 0);
     }
 
     private void RefreshPosition() {

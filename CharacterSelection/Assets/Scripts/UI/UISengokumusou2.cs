@@ -20,8 +20,8 @@ public class UISengokumusou2 : MonoBehaviour {
     [SerializeField] private RectTransform _rectTitleRoot = null;
     [SerializeField] private RectTransform _rectOperationHintRoot = null;
 
-    [SerializeField] private GameObject _goFocusCharacterPortraitRoot = null;
-    [SerializeField] private GameObject _goFocusCharacterInfoRoot = null;
+    [SerializeField] private RectTransform _rectFocusCharacterPortraitRoot = null;
+    [SerializeField] private RectTransform _rectFocusCharacterInfoRoot = null;
 
     [SerializeField] private RectTransform _rectCharacterRoot = null;
     [SerializeField] private UISengokuSelectionObject _selectionObjectRes = null;
@@ -359,11 +359,11 @@ public class UISengokumusou2 : MonoBehaviour {
     }
 
     private void ShowFocusCharacterPortrait(bool show) {
-        _goFocusCharacterPortraitRoot.SetActive(show);
+        _rectFocusCharacterPortraitRoot.gameObject.SetActive(show);
     }
 
     private void ShowFocusCharacterInfo(bool show) {
-        _goFocusCharacterInfoRoot.SetActive(show);
+        _rectFocusCharacterInfoRoot.gameObject.SetActive(show);
     }
 
     private void PlayFadeIn() {
